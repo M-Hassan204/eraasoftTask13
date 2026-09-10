@@ -1,0 +1,45 @@
+# .NET / ASP.NET Core
+bin/
+obj/
+*.user
+*.suo
+.vs/
+*.csproj.user
+*.sln.docstates
+publish/
+wwwroot/uploads/
+
+# Sensitive configs
+appsettings.Development.json
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Logs
+*.log
+*.sql
+*.sqlite
+
+# Packages
+*.7z
+*.dmg
+*.gz
+*.iso
+*.jar
+*.rar
+*.tar
+*.zip
+
+# Node
+node_modules/
+temp/
+
+# IDE
+.idea
+.vscode

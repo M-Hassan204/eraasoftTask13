@@ -1,0 +1,134 @@
+@model eraasoftTask13.ViewModels.DashboardViewModel
+
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<div class="row g-3 mb-3">
+  <div class="col-md-6 col-xxl-3">
+    <div class="card h-md-100 ecommerce-card-min-width">
+      <div class="card-header pb-0">
+        <h6 class="mb-0 mt-2 d-flex align-items-center">Total Movies</h6>
+      </div>
+      <div class="card-body d-flex flex-column justify-content-end">
+        <div class="row">
+          <div class="col">
+            <p class="font-sans-serif lh-1 mb-1 fs-5">@Model.TotalMovies</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-6 col-xxl-3">
+    <div class="card h-md-100 ecommerce-card-min-width">
+      <div class="card-header pb-0">
+        <h6 class="mb-0 mt-2 d-flex align-items-center">Now Showing</h6>
+      </div>
+      <div class="card-body d-flex flex-column justify-content-end">
+        <div class="row">
+          <div class="col">
+            <p class="font-sans-serif lh-1 mb-1 fs-5">@Model.NowShowingMovies</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-6 col-xxl-3">
+    <div class="card h-md-100 ecommerce-card-min-width">
+      <div class="card-header pb-0">
+        <h6 class="mb-0 mt-2 d-flex align-items-center">Total Bookings</h6>
+      </div>
+      <div class="card-body d-flex flex-column justify-content-end">
+        <div class="row">
+          <div class="col">
+            <p class="font-sans-serif lh-1 mb-1 fs-5">@Model.TotalBookings</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-6 col-xxl-3">
+    <div class="card h-md-100 ecommerce-card-min-width">
+      <div class="card-header pb-0">
+        <h6 class="mb-0 mt-2 d-flex align-items-center">Total Revenue</h6>
+      </div>
+      <div class="card-body d-flex flex-column justify-content-end">
+        <div class="row">
+          <div class="col">
+            <p class="font-sans-serif lh-1 mb-1 fs-5">@Model.TotalRevenue.ToString("C")</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row g-3 mb-3">
+  <div class="col-lg-6">
+    <div class="card h-100">
+      <div class="card-header d-flex flex-between-center">
+        <h6 class="mb-0">Recent Bookings</h6>
+      </div>
+      <div class="card-body pb-0">
+        <div class="table-responsive scrollbar">
+          <table class="table table-sm table-striped fs-10 mb-0 overflow-hidden">
+            <thead class="bg-200 text-900">
+              <tr>
+                <th>Ref</th>
+                <th>Customer</th>
+                <th>Movie</th>
+                <th>Cinema</th>
+                <th>Total</th>
+              </tr>
+            </thead>
+            <tbody>
+              @foreach (var item in Model.RecentBookings)
+              {
+                  <tr>
+                      <td>@item.BookingReference</td>
+                      <td>@item.CustomerName</td>
+                      <td>@item.ShowTime?.Movie?.Name</td>
+                      <td>@item.ShowTime?.Cinema?.Name</td>
+                      <td>@item.TotalPrice.ToString("C")</td>
+                  </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="col-lg-6">
+    <div class="card h-100">
+      <div class="card-header d-flex flex-between-center">
+        <h6 class="mb-0">Upcoming Shows</h6>
+      </div>
+      <div class="card-body pb-0">
+        <div class="table-responsive scrollbar">
+          <table class="table table-sm table-striped fs-10 mb-0 overflow-hidden">
+            <thead class="bg-200 text-900">
+              <tr>
+                <th>Movie</th>
+                <th>Cinema</th>
+                <th>Hall</th>
+                <th>Time</th>
+              </tr>
+            </thead>
+            <tbody>
+              @foreach (var show in Model.UpcomingShows)
+              {
+                  <tr>
+                      <td>@show.Movie?.Name</td>
+                      <td>@show.Cinema?.Name</td>
+                      <td>@show.Hall?.Name</td>
+                      <td>@show.StartTime.ToString("g")</td>
+                  </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

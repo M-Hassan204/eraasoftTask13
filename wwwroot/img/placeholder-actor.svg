@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 300" fill="none">
+  <rect width="200" height="300" fill="#2d3142"/>
+  <rect x="60" y="80" width="80" height="100" rx="8" fill="#4a4e69"/>
+  <circle cx="100" cy="110" r="20" fill="#9a8c98"/>
+  <path d="M70 165 Q100 145 130 165 L130 180 Q100 165 70 180 Z" fill="#9a8c98"/>
+  <text x="100" y="230" text-anchor="middle" fill="#c9ada7" font-size="12" font-family="sans-serif">Actor</text>
+</svg>

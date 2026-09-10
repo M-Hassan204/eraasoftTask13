@@ -1,0 +1,240 @@
+@model eraasoftTask13.ViewModels.MovieEditViewModel
+@{
+    ViewData["Title"] = "Edit Movie";
+    var actors = ViewData["Actors"] as List<eraasoftTask13.Models.Actor> ?? new();
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h3 class="mb-0 text-800"><span class="fas fa-edit me-2 text-warning"></span>Edit Movie</h3>
+    <a asp-action="Index" class="btn btn-falcon-default"><span class="fas fa-arrow-left me-2"></span>Back</a>
+</div>
+
+<form asp-action="Edit" method="post" enctype="multipart/form-data">
+    <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+    <input type="hidden" asp-for="Id" />
+
+    <div class="row g-4">
+        <div class="col-lg-8">
+
+            <!-- Basic Information -->
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-light">
+                    <h5 class="mb-0"><span class="fas fa-info-circle me-2 text-warning"></span>Basic Information</h5>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label asp-for="Name" class="form-label fw-semibold"></label>
+                        <input asp-for="Name" class="form-control" />
+                        <span asp-validation-for="Name" class="text-danger small"></span>
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="Description" class="form-label fw-semibold"></label>
+                        <textarea asp-for="Description" class="form-control" rows="4"></textarea>
+                    </div>
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <label asp-for="Status" class="form-label fw-semibold"></label>
+                            <select asp-for="Status" class="form-select"
+                                    asp-items="Html.GetEnumSelectList<eraasoftTask13.Models.MovieStatus>()"></select>
+                        </div>
+                        <div class="col-md-4">
+                            <label asp-for="ReleaseDate" class="form-label fw-semibold"></label>
+                            <input asp-for="ReleaseDate" class="form-control" type="date" />
+                        </div>
+                        <div class="col-md-4">
+                            <label asp-for="DurationInMinutes" class="form-label fw-semibold"></label>
+                            <div class="input-group">
+                                <input asp-for="DurationInMinutes" class="form-control" type="number" min="1" />
+                                <span class="input-group-text">min</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-3 form-check form-switch">
+                        <input asp-for="IsActive" class="form-check-input" type="checkbox" />
+                        <label asp-for="IsActive" class="form-check-label fw-semibold">Active</label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Classification -->
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-light">
+                    <h5 class="mb-0"><span class="fas fa-layer-group me-2 text-info"></span>Classification</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-6">
+                            <label asp-for="CategoryId" class="form-label fw-semibold"></label>
+                            <select asp-for="CategoryId" class="form-select" asp-items="ViewBag.CategoryId"></select>
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="CinemaId" class="form-label fw-semibold"></label>
+                            <select asp-for="CinemaId" class="form-select" asp-items="ViewBag.CinemaId"></select>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="form-label fw-semibold">Actors</label>
+                        <div class="row g-2">
+                            @foreach (var actor in actors)
+                            {
+                                <div class="col-6 col-md-4">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox"
+                                               name="SelectedActorIds" value="@actor.Id"
+                                               id="actor_@actor.Id"
+                                               @(Model.SelectedActorIds.Contains(actor.Id) ? "checked" : "") />
+                                        <label class="form-check-label" for="actor_@actor.Id">@actor.Name</label>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Images -->
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-light">
+                    <h5 class="mb-0"><span class="fas fa-images me-2 text-warning"></span>Movie Images</h5>
+                </div>
+                <div class="card-body">
+
+                    <!-- Main Image -->
+                    <div class="mb-4">
+                        <h6 class="fw-semibold">Main Poster</h6>
+                        @if (!string.IsNullOrWhiteSpace(Model.ExistingMainImage))
+                        {
+                            <div class="mb-2">
+                                <p class="small text-600 mb-1">Current poster:</p>
+                                <img src="@Model.ExistingMainImage" alt="Current Poster"
+                                     class="rounded shadow-sm" style="max-height:200px;object-fit:cover;"
+                                     onerror="this.src='/img/placeholder-movie.svg'" />
+                            </div>
+                        }
+                        <input asp-for="MainImageFile" type="file" class="form-control" accept=".jpg,.jpeg,.png,.webp" id="mainImageInput" />
+                        <div class="form-text">Leave blank to keep current poster.</div>
+                        <div id="mainPreviewWrapper" class="d-none mt-2">
+                            <img id="mainPreview" src="#" alt="New Poster Preview"
+                                 class="rounded shadow-sm" style="max-height:200px;object-fit:cover;" />
+                        </div>
+                    </div>
+
+                    <hr />
+
+                    <!-- Sub Images - existing -->
+                    @if (Model.ExistingSubImages.Any())
+                    {
+                        <div class="mb-4">
+                            <h6 class="fw-semibold mb-3">Current Gallery Images</h6>
+                            <p class="small text-600 mb-2">Check images to delete them:</p>
+                            <div class="row g-2">
+                                @foreach (var img in Model.ExistingSubImages)
+                                {
+                                    <div class="col-6 col-md-4 col-lg-3">
+                                        <div class="card border @(false ? "border-danger" : "") p-1">
+                                            <div class="position-relative">
+                                                <img src="@img.ImagePath" alt="Gallery Image"
+                                                     class="img-fluid rounded" style="height:100px;width:100%;object-fit:cover;"
+                                                     onerror="this.src='/img/placeholder-movie.svg'" />
+                                                <div class="position-absolute top-0 end-0 m-1">
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="checkbox"
+                                                               name="DeletedSubImageIds" value="@img.Id"
+                                                               id="del_@img.Id"
+                                                               onchange="toggleDeleteOverlay(this)" />
+                                                        <label class="form-check-label" for="del_@img.Id">
+                                                            <span class="badge bg-danger">Delete</span>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                        <hr />
+                    }
+
+                    <!-- Add new sub images -->
+                    <div>
+                        <h6 class="fw-semibold">Add More Gallery Images</h6>
+                        <input asp-for="SubImageFiles" type="file" class="form-control" accept=".jpg,.jpeg,.png,.webp"
+                               id="subImagesInput" multiple />
+                        <div class="form-text">Hold Ctrl / Cmd to select multiple.</div>
+                        <div id="subPreviewContainer" class="d-flex flex-wrap gap-2 mt-3"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card shadow-sm sticky-top" style="top:80px;">
+                <div class="card-header bg-light">
+                    <h5 class="mb-0">Current Poster</h5>
+                </div>
+                <div class="card-body text-center">
+                    @if (!string.IsNullOrWhiteSpace(Model.ExistingMainImage))
+                    {
+                        <img src="@Model.ExistingMainImage" alt="@Model.Name" class="img-fluid rounded shadow"
+                             style="max-height:250px;object-fit:cover;"
+                             onerror="this.src='/img/placeholder-movie.svg'" />
+                    }
+                    else
+                    {
+                        <div class="bg-soft-warning rounded d-flex align-items-center justify-content-center" style="height:200px;">
+                            <span class="fas fa-film text-warning" style="font-size:48px;"></span>
+                        </div>
+                    }
+                    <h6 class="fw-bold mt-3 mb-0">@Model.Name</h6>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="d-flex gap-2 mt-2">
+        <button type="submit" class="btn btn-primary px-4"><span class="fas fa-save me-2"></span>Save Changes</button>
+        <a asp-action="Index" class="btn btn-falcon-default">Cancel</a>
+    </div>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        document.getElementById('mainImageInput').addEventListener('change', function () {
+            const w = document.getElementById('mainPreviewWrapper');
+            const p = document.getElementById('mainPreview');
+            if (this.files && this.files[0]) {
+                const r = new FileReader();
+                r.onload = e => { p.src = e.target.result; w.classList.remove('d-none'); };
+                r.readAsDataURL(this.files[0]);
+            } else { w.classList.add('d-none'); }
+        });
+
+        document.getElementById('subImagesInput').addEventListener('change', function () {
+            const container = document.getElementById('subPreviewContainer');
+            container.innerHTML = '';
+            Array.from(this.files).forEach(file => {
+                const r = new FileReader();
+                r.onload = e => {
+                    const div = document.createElement('div');
+                    div.innerHTML = `<img src="${e.target.result}" alt="preview"
+                        class="rounded shadow-sm" style="width:90px;height:90px;object-fit:cover;" />`;
+                    container.appendChild(div);
+                };
+                r.readAsDataURL(file);
+            });
+        });
+
+        function toggleDeleteOverlay(checkbox) {
+            const card = checkbox.closest('.card');
+            if (checkbox.checked) {
+                card.classList.add('border-danger');
+                card.querySelector('img').style.opacity = '0.4';
+            } else {
+                card.classList.remove('border-danger');
+                card.querySelector('img').style.opacity = '1';
+            }
+        }
+    </script>
+}

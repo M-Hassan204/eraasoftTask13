@@ -1,0 +1,104 @@
+@model IEnumerable<eraasoftTask13.Models.Movie>
+@{
+    ViewData["Title"] = "Movies";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h3 class="mb-1 text-800"><span class="fas fa-video me-2 text-warning"></span>Movies</h3>
+        <p class="mb-0 text-600">@Model.Count() movies in the system</p>
+    </div>
+    <a asp-action="Create" class="btn btn-primary">
+        <span class="fas fa-plus me-2"></span>Add Movie
+    </a>
+</div>
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <span class="fas fa-check-circle me-2"></span>@TempData["Success"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+
+<div class="row g-3">
+    @foreach (var movie in Model)
+    {
+        <div class="col-12 col-md-6 col-lg-4">
+            <div class="card h-100 shadow-sm overflow-hidden cinema-card">
+                <div class="position-relative">
+                    @if (!string.IsNullOrWhiteSpace(movie.MainImage))
+                    {
+                        <img src="@movie.MainImage" alt="@movie.Name"
+                             class="card-img-top" style="height:300px;object-fit:cover;"
+                             onerror="this.src='/img/placeholder-movie.svg'" />
+                    }
+                    else
+                    {
+                        <div class="d-flex align-items-center justify-content-center bg-soft-warning" style="height:300px;">
+                            <span class="fas fa-film text-warning" style="font-size:64px;"></span>
+                        </div>
+                    }
+                    <div class="position-absolute top-0 start-0 m-2">
+                        @{
+                            var statusClass = movie.Status == eraasoftTask13.Models.MovieStatus.NowShowing ? "bg-success"
+                                : movie.Status == eraasoftTask13.Models.MovieStatus.ComingSoon ? "bg-info"
+                                : "bg-secondary";
+                            var statusIcon = movie.Status == eraasoftTask13.Models.MovieStatus.NowShowing ? "fas fa-play-circle"
+                                : movie.Status == eraasoftTask13.Models.MovieStatus.ComingSoon ? "fas fa-clock"
+                                : "fas fa-stop-circle";
+                        }
+                        <span class="badge @statusClass">
+                            <span class="@statusIcon me-1"></span>
+                            @movie.Status.ToString().Replace("NowShowing","Now Showing").Replace("ComingSoon","Coming Soon")
+                        </span>
+                    </div>
+                    <div class="position-absolute bottom-0 start-0 end-0 p-2"
+                         style="background:linear-gradient(transparent, rgba(0,0,0,0.7));">
+                        <h6 class="text-white fw-bold mb-0 text-truncate">@movie.Name</h6>
+                    </div>
+                </div>
+                <div class="card-body pb-2">
+                    <div class="d-flex flex-wrap gap-2 mb-2">
+                        <span class="badge bg-soft-primary text-primary">
+                            <span class="fas fa-tag me-1"></span>@movie.Category?.Name
+                        </span>
+                        <span class="badge bg-soft-danger text-danger">
+                            <span class="fas fa-building me-1"></span>@movie.Cinema?.Name
+                        </span>
+                    </div>
+                    <div class="d-flex gap-3 text-600 small">
+                        <span><span class="fas fa-clock me-1"></span>@movie.DurationInMinutes min</span>
+                        <span><span class="fas fa-calendar me-1"></span>@movie.ReleaseDate.ToString("MMM yyyy")</span>
+                        <span><span class="fas fa-users me-1"></span>@movie.MovieActors.Count actors</span>
+                    </div>
+                </div>
+                <div class="card-footer bg-transparent pt-0 pb-3 px-3">
+                    <div class="d-flex gap-2">
+                        <a asp-action="Details" asp-route-id="@movie.Id" class="btn btn-sm btn-falcon-default flex-grow-1">
+                            <span class="fas fa-eye me-1"></span>Details
+                        </a>
+                        <a asp-action="Edit" asp-route-id="@movie.Id" class="btn btn-sm btn-falcon-primary flex-grow-1">
+                            <span class="fas fa-pencil me-1"></span>Edit
+                        </a>
+                        <a asp-action="Delete" asp-route-id="@movie.Id" class="btn btn-sm btn-falcon-danger">
+                            <span class="fas fa-trash"></span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    @if (!Model.Any())
+    {
+        <div class="col-12">
+            <div class="card text-center py-5">
+                <div class="card-body">
+                    <span class="fas fa-video-slash text-300 mb-3" style="font-size:64px;display:block;"></span>
+                    <h5 class="text-600">No movies yet</h5>
+                    <a asp-action="Create" class="btn btn-primary mt-2">Add Movie</a>
+                </div>
+            </div>
+        </div>
+    }
+</div>

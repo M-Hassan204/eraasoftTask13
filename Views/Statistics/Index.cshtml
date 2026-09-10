@@ -1,0 +1,92 @@
+@model eraasoftTask13.ViewModels.StatisticsViewModel
+
+@{
+    ViewData["Title"] = "Statistics";
+}
+
+<div class="row g-3 mb-3">
+    <div class="col-lg-4">
+        <div class="card h-100">
+            <div class="card-header"><h6 class="mb-0">Movies Overview</h6></div>
+            <div class="card-body">
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item d-flex justify-content-between align-items-center">Total <span class="badge bg-primary rounded-pill">@Model.TotalMovies</span></li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">Now Showing <span class="badge bg-success rounded-pill">@Model.NowShowingMovies</span></li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">Coming Soon <span class="badge bg-warning rounded-pill">@Model.ComingSoonMovies</span></li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">Ended <span class="badge bg-secondary rounded-pill">@Model.EndedMovies</span></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-4">
+        <div class="card h-100">
+            <div class="card-header"><h6 class="mb-0">Bookings Overview</h6></div>
+            <div class="card-body">
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item d-flex justify-content-between align-items-center">Total <span class="badge bg-primary rounded-pill">@Model.TotalBookings</span></li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">Confirmed <span class="badge bg-success rounded-pill">@Model.ConfirmedBookings</span></li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">Pending <span class="badge bg-warning rounded-pill">@Model.PendingBookings</span></li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">Cancelled <span class="badge bg-danger rounded-pill">@Model.CancelledBookings</span></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-4">
+        <div class="card h-100">
+            <div class="card-header"><h6 class="mb-0">Revenue Overview</h6></div>
+            <div class="card-body">
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item d-flex justify-content-between align-items-center">Total <strong>@Model.TotalRevenue.ToString("C")</strong></li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">Today <strong>@Model.RevenueToday.ToString("C")</strong></li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">This Month <strong>@Model.RevenueThisMonth.ToString("C")</strong></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-3">
+    <div class="col-lg-6">
+        <div class="card h-100">
+            <div class="card-header"><h6 class="mb-0">Cinemas Performance</h6></div>
+            <div class="card-body">
+                <table class="table table-striped">
+                    <thead><tr><th>Cinema</th><th>Movies</th><th>Bookings</th><th>Revenue</th></tr></thead>
+                    <tbody>
+                        @foreach(var key in Model.MoviesPerCinema.Keys)
+                        {
+                            <tr>
+                                <td>@key</td>
+                                <td>@Model.MoviesPerCinema[key]</td>
+                                <td>@Model.BookingsPerCinema[key]</td>
+                                <td>@Model.RevenuePerCinema[key].ToString("C")</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-6">
+        <div class="card h-100">
+            <div class="card-header"><h6 class="mb-0">Movies Per Category</h6></div>
+            <div class="card-body">
+                <table class="table table-striped">
+                    <thead><tr><th>Category</th><th>Count</th></tr></thead>
+                    <tbody>
+                        @foreach(var key in Model.MoviesPerCategory.Keys)
+                        {
+                            <tr>
+                                <td>@key</td>
+                                <td>@Model.MoviesPerCategory[key]</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

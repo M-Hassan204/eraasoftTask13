@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 300" fill="none">
+  <rect width="200" height="300" fill="#1a1a2e"/>
+  <rect x="30" y="70" width="140" height="110" rx="6" fill="#16213e"/>
+  <polygon points="100,85 140,155 60,155" fill="#0f3460"/>
+  <circle cx="80" cy="100" r="10" fill="#e94560"/>
+  <rect x="40" y="200" width="120" height="14" rx="4" fill="#e94560"/>
+  <rect x="60" y="224" width="80" height="10" rx="3" fill="#e94560" opacity="0.5"/>
+  <text x="100" y="270" text-anchor="middle" fill="#aaa" font-size="11" font-family="sans-serif">Movie Poster</text>
+</svg>

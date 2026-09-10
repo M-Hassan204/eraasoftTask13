@@ -1,0 +1,102 @@
+@model eraasoftTask13.ViewModels.BookingViewModel
+
+@{
+    ViewData["Title"] = "Book Tickets";
+}
+
+<div class="card mb-3">
+    <div class="card-header bg-light">
+        <h5 class="mb-0">Book Tickets for @Model.ShowTime.Movie?.Name</h5>
+        <p class="mb-0 fs-10">@Model.ShowTime.Cinema?.Name - @Model.ShowTime.Hall?.Name | @Model.ShowTime.StartTime.ToString("f")</p>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-8">
+                <div class="text-center mb-4">
+                    <div class="bg-dark text-white p-2 rounded mb-3" style="width: 80%; margin: 0 auto; border-top-left-radius: 50% !important; border-top-right-radius: 50% !important;">SCREEN</div>
+                </div>
+                
+                <form asp-action="Book" method="post" id="bookingForm">
+                    <input type="hidden" name="ShowTimeId" value="@Model.ShowTime.Id" />
+                    <div class="d-flex flex-wrap justify-content-center gap-2 mb-4" style="max-width: 600px; margin: 0 auto;">
+                        @foreach (var seat in Model.AllSeats.OrderBy(s => s.RowNumber).ThenBy(s => s.SeatNumber))
+                        {
+                            bool isBooked = Model.BookedSeatIds.Contains(seat.Id);
+                            string seatClass = isBooked ? "btn-secondary disabled" : "btn-outline-primary seat-btn";
+                            
+                            <label class="btn @seatClass btn-sm" style="width: 45px; height: 45px; display: flex; align-items: center; justify-content: center;">
+                                @if (!isBooked)
+                                {
+                                    <input type="checkbox" name="SelectedSeatIds" value="@seat.Id" class="d-none seat-checkbox" data-price="@Model.ShowTime.TicketPrice" />
+                                }
+                                @seat.RowNumber-@seat.SeatNumber
+                            </label>
+                        }
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Customer Name</label>
+                            <input type="text" name="CustomerName" class="form-control" required />
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Customer Email</label>
+                            <input type="email" name="CustomerEmail" class="form-control" required />
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Customer Phone</label>
+                            <input type="text" name="CustomerPhone" class="form-control" required />
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-success mt-3" id="submitBtn" disabled>Confirm Booking (<span id="totalPrice">0</span> USD)</button>
+                </form>
+            </div>
+            
+            <div class="col-md-4">
+                <div class="card bg-light">
+                    <div class="card-body">
+                        <h6>Legend</h6>
+                        <div class="d-flex align-items-center mb-2">
+                            <div class="bg-secondary rounded me-2" style="width: 20px; height: 20px;"></div> Booked
+                        </div>
+                        <div class="d-flex align-items-center mb-2">
+                            <div class="border border-primary rounded me-2" style="width: 20px; height: 20px;"></div> Available
+                        </div>
+                        <div class="d-flex align-items-center">
+                            <div class="bg-primary rounded me-2" style="width: 20px; height: 20px;"></div> Selected
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const checkboxes = document.querySelectorAll('.seat-checkbox');
+            const submitBtn = document.getElementById('submitBtn');
+            const totalPriceSpan = document.getElementById('totalPrice');
+            const pricePerSeat = @Model.ShowTime.TicketPrice;
+
+            checkboxes.forEach(cb => {
+                cb.addEventListener('change', function() {
+                    const label = this.closest('label');
+                    if (this.checked) {
+                        label.classList.remove('btn-outline-primary');
+                        label.classList.add('btn-primary');
+                    } else {
+                        label.classList.remove('btn-primary');
+                        label.classList.add('btn-outline-primary');
+                    }
+                    
+                    const selectedCount = document.querySelectorAll('.seat-checkbox:checked').length;
+                    totalPriceSpan.textContent = (selectedCount * pricePerSeat).toFixed(2);
+                    submitBtn.disabled = selectedCount === 0;
+                });
+            });
+        });
+    </script>
+}

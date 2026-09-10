@@ -1,0 +1,79 @@
+@model eraasoftTask13.ViewModels.CategoryEditViewModel
+@{
+    ViewData["Title"] = "Edit Category";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h3 class="mb-0 text-800"><span class="fas fa-edit me-2 text-info"></span>Edit Category</h3>
+    <a asp-action="Index" class="btn btn-falcon-default"><span class="fas fa-arrow-left me-2"></span>Back</a>
+</div>
+
+<div class="row g-4">
+    <div class="col-lg-8">
+        <form asp-action="Edit" method="post" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+            <input type="hidden" asp-for="Id" />
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-light">
+                    <h5 class="mb-0"><span class="fas fa-info-circle me-2 text-info"></span>Category Details</h5>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label asp-for="Name" class="form-label fw-semibold"></label>
+                        <input asp-for="Name" class="form-control" />
+                        <span asp-validation-for="Name" class="text-danger small"></span>
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="Description" class="form-label fw-semibold"></label>
+                        <textarea asp-for="Description" class="form-control" rows="3"></textarea>
+                    </div>
+                    <div class="form-check form-switch">
+                        <input asp-for="IsActive" class="form-check-input" type="checkbox" />
+                        <label asp-for="IsActive" class="form-check-label fw-semibold">Active</label>
+                    </div>
+                </div>
+            </div>
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-light">
+                    <h5 class="mb-0"><span class="fas fa-image me-2 text-warning"></span>Category Image</h5>
+                </div>
+                <div class="card-body">
+                    @if (!string.IsNullOrWhiteSpace(Model.ExistingImage))
+                    {
+                        <div class="mb-3">
+                            <p class="small text-600 fw-semibold mb-1">Current Image:</p>
+                            <img src="@Model.ExistingImage" alt="Current"
+                                 class="rounded shadow-sm" style="max-height:150px;object-fit:cover;"
+                                 onerror="this.src='/img/placeholder-category.svg'" />
+                        </div>
+                    }
+                    <input asp-for="ImageFile" type="file" class="form-control" accept=".jpg,.jpeg,.png,.webp" id="catImageInput" />
+                    <div class="form-text">Leave blank to keep current. Accepted: JPG, PNG, WEBP. Max 10 MB.</div>
+                    <div id="imagePreviewWrapper" class="d-none mt-3">
+                        <img id="imagePreview" src="#" alt="Preview"
+                             class="rounded shadow-sm" style="max-height:150px;object-fit:cover;" />
+                    </div>
+                </div>
+            </div>
+            <div class="d-flex gap-2">
+                <button type="submit" class="btn btn-primary px-4"><span class="fas fa-save me-2"></span>Save</button>
+                <a asp-action="Index" class="btn btn-falcon-default">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        document.getElementById('catImageInput').addEventListener('change', function () {
+            const w = document.getElementById('imagePreviewWrapper');
+            const p = document.getElementById('imagePreview');
+            if (this.files && this.files[0]) {
+                const r = new FileReader();
+                r.onload = e => { p.src = e.target.result; w.classList.remove('d-none'); };
+                r.readAsDataURL(this.files[0]);
+            } else { w.classList.add('d-none'); }
+        });
+    </script>
+}

@@ -1,0 +1,126 @@
+@model eraasoftTask13.ViewModels.ActorEditViewModel
+@{
+    ViewData["Title"] = "Edit Actor";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h3 class="mb-1 text-800"><span class="fas fa-user-edit me-2 text-primary"></span>Edit Actor</h3>
+        <p class="mb-0 text-600">Update the actor's information</p>
+    </div>
+    <a asp-action="Index" class="btn btn-falcon-default">
+        <span class="fas fa-arrow-left me-2"></span>Back to Actors
+    </a>
+</div>
+
+<div class="row g-4">
+    <div class="col-lg-8">
+        <form asp-action="Edit" method="post" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+            <input type="hidden" asp-for="Id" />
+
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-light">
+                    <h5 class="mb-0"><span class="fas fa-info-circle me-2 text-primary"></span>Actor Information</h5>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label asp-for="Name" class="form-label fw-semibold"></label>
+                        <input asp-for="Name" class="form-control" />
+                        <span asp-validation-for="Name" class="text-danger small"></span>
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="Bio" class="form-label fw-semibold"></label>
+                        <textarea asp-for="Bio" class="form-control" rows="4"></textarea>
+                        <span asp-validation-for="Bio" class="text-danger small"></span>
+                    </div>
+                    <div class="mb-3">
+                        <div class="form-check form-switch">
+                            <input asp-for="IsActive" class="form-check-input" type="checkbox" />
+                            <label asp-for="IsActive" class="form-check-label fw-semibold">Active</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-light">
+                    <h5 class="mb-0"><span class="fas fa-image me-2 text-warning"></span>Actor Photo</h5>
+                </div>
+                <div class="card-body">
+                    @if (!string.IsNullOrWhiteSpace(Model.ExistingImage))
+                    {
+                        <div class="mb-3">
+                            <p class="text-600 small mb-2 fw-semibold">Current Photo:</p>
+                            <img src="@Model.ExistingImage" alt="Current Photo"
+                                 class="rounded shadow-sm" style="max-height:180px;max-width:180px;object-fit:cover;"
+                                 onerror="this.src='/img/placeholder-actor.svg'" />
+                        </div>
+                    }
+                    <div class="mb-3">
+                        <label asp-for="ImageFile" class="form-label fw-semibold"></label>
+                        <input asp-for="ImageFile" type="file" class="form-control" accept=".jpg,.jpeg,.png,.webp" id="actorImageInput" />
+                        <span asp-validation-for="ImageFile" class="text-danger small"></span>
+                        <div class="form-text">Leave empty to keep current photo. Accepted: JPG, PNG, WEBP. Max 10 MB.</div>
+                    </div>
+                    <div id="imagePreviewWrapper" class="d-none mt-3">
+                        <p class="text-600 small mb-2 fw-semibold">New photo preview:</p>
+                        <img id="imagePreview" src="#" alt="Preview"
+                             class="rounded shadow-sm" style="max-height:200px;max-width:200px;object-fit:cover;" />
+                    </div>
+                </div>
+            </div>
+
+            <div class="d-flex gap-2">
+                <button type="submit" class="btn btn-primary px-4">
+                    <span class="fas fa-save me-2"></span>Save Changes
+                </button>
+                <a asp-action="Index" class="btn btn-falcon-default">Cancel</a>
+            </div>
+        </form>
+    </div>
+
+    <div class="col-lg-4">
+        <div class="card shadow-sm">
+            <div class="card-header bg-light">
+                <h5 class="mb-0">Current Actor</h5>
+            </div>
+            <div class="card-body text-center">
+                @if (!string.IsNullOrWhiteSpace(Model.ExistingImage))
+                {
+                    <img src="@Model.ExistingImage" alt="@Model.Name"
+                         class="rounded-circle mb-3 shadow" style="width:120px;height:120px;object-fit:cover;"
+                         onerror="this.src='/img/placeholder-actor.svg'" />
+                }
+                else
+                {
+                    <div class="rounded-circle bg-300 d-flex align-items-center justify-content-center mx-auto mb-3"
+                         style="width:120px;height:120px;">
+                        <span class="fas fa-user text-400" style="font-size:48px;"></span>
+                    </div>
+                }
+                <h6 class="fw-bold text-900">@Model.Name</h6>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        document.getElementById('actorImageInput').addEventListener('change', function () {
+            const wrapper = document.getElementById('imagePreviewWrapper');
+            const preview = document.getElementById('imagePreview');
+            if (this.files && this.files[0]) {
+                const reader = new FileReader();
+                reader.onload = e => {
+                    preview.src = e.target.result;
+                    wrapper.classList.remove('d-none');
+                };
+                reader.readAsDataURL(this.files[0]);
+            } else {
+                wrapper.classList.add('d-none');
+            }
+        });
+    </script>
+}

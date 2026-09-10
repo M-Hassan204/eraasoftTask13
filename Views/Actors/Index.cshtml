@@ -1,0 +1,92 @@
+@model IEnumerable<eraasoftTask13.Models.Actor>
+@{
+    ViewData["Title"] = "Actors";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h3 class="mb-1 text-800"><span class="fas fa-star me-2 text-warning"></span>Actors</h3>
+        <p class="mb-0 text-600">Manage all actors in the cinema system</p>
+    </div>
+    <a asp-action="Create" class="btn btn-primary">
+        <span class="fas fa-plus me-2"></span>Add Actor
+    </a>
+</div>
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <span class="fas fa-check-circle me-2"></span>@TempData["Success"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+
+<div class="row g-3">
+    @foreach (var actor in Model)
+    {
+        <div class="col-12 col-md-6 col-lg-4">
+            <div class="card h-100 shadow-sm overflow-hidden cinema-card">
+                <div class="position-relative">
+                    @if (!string.IsNullOrWhiteSpace(actor.Image))
+                    {
+                        <img src="@actor.Image" alt="@actor.Name"
+                             class="card-img-top" style="height:260px;object-fit:cover;"
+                             onerror="this.src='/img/placeholder-actor.svg'" />
+                    }
+                    else
+                    {
+                        <div class="d-flex align-items-center justify-content-center bg-300" style="height:260px;">
+                            <span class="fas fa-user-circle text-400" style="font-size:80px;"></span>
+                        </div>
+                    }
+                    <div class="position-absolute top-0 end-0 m-2">
+                        @if (actor.IsActive)
+                        {
+                            <span class="badge bg-success"><span class="fas fa-circle me-1" style="font-size:8px;"></span>Active</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-secondary">Inactive</span>
+                        }
+                    </div>
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title fw-bold text-900 mb-1">@actor.Name</h5>
+                    <p class="card-text text-600 small mb-3" style="display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">
+                        @(string.IsNullOrWhiteSpace(actor.Bio) ? "No biography available." : actor.Bio)
+                    </p>
+                    <div class="d-flex align-items-center text-600 small mb-3">
+                        <span class="fas fa-film me-1"></span>
+                        <span>@actor.MovieActors.Count movie(s)</span>
+                    </div>
+                </div>
+                <div class="card-footer bg-transparent border-top-0 pt-0 pb-3 px-3">
+                    <div class="d-flex gap-2">
+                        <a asp-action="Details" asp-route-id="@actor.Id" class="btn btn-sm btn-falcon-default flex-grow-1">
+                            <span class="fas fa-eye me-1"></span>Details
+                        </a>
+                        <a asp-action="Edit" asp-route-id="@actor.Id" class="btn btn-sm btn-falcon-primary flex-grow-1">
+                            <span class="fas fa-pencil me-1"></span>Edit
+                        </a>
+                        <a asp-action="Delete" asp-route-id="@actor.Id" class="btn btn-sm btn-falcon-danger">
+                            <span class="fas fa-trash"></span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    @if (!Model.Any())
+    {
+        <div class="col-12">
+            <div class="card text-center py-5">
+                <div class="card-body">
+                    <span class="fas fa-user-slash text-300 mb-3" style="font-size:64px;display:block;"></span>
+                    <h5 class="text-600">No actors yet</h5>
+                    <p class="text-500">Start by adding your first actor.</p>
+                    <a asp-action="Create" class="btn btn-primary">Add Actor</a>
+                </div>
+            </div>
+        </div>
+    }
+</div>
