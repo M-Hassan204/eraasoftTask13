@@ -1,32 +1,119 @@
-# .NET / ASP.NET Core
-bin/
-obj/
-*.user
-*.suo
+# ==========================================
+# Visual Studio / .NET
+# ==========================================
+
+# Build results
+[Bb]in/
+[Oo]bj/
+
+# Visual Studio files
 .vs/
-*.csproj.user
-*.sln.docstates
-publish/
-wwwroot/uploads/
+*.user
+*.userosscache
+*.suo
+*.rsuser
+*.userprefs
 
-# Sensitive configs
-appsettings.Development.json
+# Visual Studio Code
+.vscode/
 
+# Rider / JetBrains
+.idea/
+*.sln.iml
+
+# ==========================================
+# .NET
+# ==========================================
+
+# NuGet
+*.nupkg
+*.snupkg
+packages/
+.nuget/
+
+# ASP.NET Core generated files
+wwwroot/lib/
+
+# User-specific ASP.NET Core development settings
+appsettings.Development.local.json
+
+# User secrets
+secrets.json
+
+# ==========================================
+# Logs
+# ==========================================
+
+*.log
+logs/
+
+# ==========================================
+# Database / Local Data
+# ==========================================
+
+# Local database files
+*.sqlite
+*.sqlite3
+*.db
+
+# SQL Server local database files
+*.mdf
+*.ldf
+
+# NOTE:
+# Do NOT ignore *.sql globally.
+# SQL scripts can be useful project files.
+
+# ==========================================
+# Node.js / Frontend
+# ==========================================
+
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Temporary frontend/build files
+temp/
+tmp/
+.cache/
+.parcel-cache/
+
+# ==========================================
+# Falcon / Frontend build
+# ==========================================
+
+# If Falcon generates these locally
+dist/
+build/
+
+# ==========================================
 # OS generated files
+# ==========================================
+
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+Desktop.ini
+
+# macOS
 .DS_Store
 .DS_Store?
 ._*
 .Spotlight-V100
 .Trashes
-ehthumbs.db
-Thumbs.db
 
-# Logs
-*.log
-*.sql
-*.sqlite
+# Linux
+*~
+.fuse_hidden*
+.directory
 
-# Packages
+# ==========================================
+# Archives
+# ==========================================
+
 *.7z
 *.dmg
 *.gz
@@ -36,10 +123,52 @@ Thumbs.db
 *.tar
 *.zip
 
-# Node
-node_modules/
-temp/
+# ==========================================
+# Compiled / Binary files
+# ==========================================
 
-# IDE
-.idea
-.vscode
+*.dll
+*.exe
+*.com
+*.class
+*.o
+*.so
+
+# ==========================================
+# Temporary files
+# ==========================================
+
+*.tmp
+*.temp
+*.bak
+*.swp
+*.swo
+
+# ==========================================
+# Test results / Coverage
+# ==========================================
+
+TestResults/
+*.trx
+coverage/
+coverage.opencover.xml
+
+# ==========================================
+# Generated documentation
+# ==========================================
+
+*.cache
+
+# ==========================================
+# Local environment files
+# ==========================================
+
+.env
+.env.*
+!.env.example
+
+# ==========================================
+# Project-specific temporary files
+# ==========================================
+
+temp/
